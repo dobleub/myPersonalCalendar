@@ -1,0 +1,80 @@
+body {
+   font-family: Tahoma, Verdana, Sans-Serif;
+}
+div.mycalendar {
+   height: 215px;
+   width: 305px;
+   /*padding: 3px;*/
+   /*border: 1px solid #3a3a3a;*/
+}
+table.tableMyCalendar {
+   font-size: 0.7em;
+   width: 100%;
+   height: 100%;
+   text-align: center;
+   vertical-align: middle;
+   background-color: transparent;
+}
+thead.headMyCalendar {
+   background-color: #5E544F;
+   color: #fff;
+}
+td.dayLabel {
+   display: none;
+   /*font-size: 0.8em;*/
+   /*font-weight: bold;*/
+}
+span.currentMonth {
+   font-weight: bold;
+}
+div.nextMonth, div.prevMonth {
+   height: 1.5em;
+   padding-top: 0.2em;
+   font-size: 1.5em;
+   cursor: pointer;
+   /*font-weight: bold;*/
+}
+div.nextMonth:hover, div.prevMonth:hover {
+   background-color: #4C4542;
+}
+div.active-day, div.active-day-for-week {
+   display: block;
+   height: 25px;
+   width: 28px;
+   text-align: center;
+   vertical-align: middle;
+   margin: auto;
+   cursor: pointer;
+   /*border: 1px solid #3a3a3a;*/
+}
+div.active-day p, div.active-day-for-week p {
+   /*margin-top: 4em;*/
+   margin: auto;
+   padding-top: 0.45em;
+}
+div.active-day:hover, div.active-day-for-week:hover {
+   background-color: #e5e5e5;
+}
+div.today{
+   background-color: #e1e1e1;
+   /*color: #fff;*/
+}
+tr.selected-week, div.selected-day {
+   background-color: #5E544F;
+   color: #fff;
+}
+div.selected-day:hover {
+   background-color: #4C4542;
+}
+tr.selected-week td div:hover {
+   background-color: #4C4542;
+   color: #fff;  
+}
+div.other-month {
+   color: #a1a1a1;
+}
+em {
+   display: inline-block;
+   font-size: 1em;
+   width: 1em;
+}
