@@ -4,8 +4,8 @@
          var settings = $.extend({
             selectedClass: "active-day",
             text: null,
+            onLoad: null,
             onClick: null,
-            onMouseOver: null,
          }, options);
 
          return this.each(function(){
@@ -16,7 +16,6 @@
             var today = new Date();
             var month = today.getMonth();
             var year = today.getFullYear();
-            // console.log(today);
 
             // creating the elements
             var tableContent = $('<table class="tableMyCalendar" cellspacing="0"></table>');
@@ -41,7 +40,6 @@
             var setDateTi = $('<h1 class="h1">'+dayNames[ (todayPosition == dayNames.length ? 0 : todayPosition) ]+' '+today.getDate()+'</h1><h2 class="h2">'+monthNames[month]+'</h2>');
             $('.ti').empty().append(setDateTi);
 
-            // calling functions
             tableContent.find('div.prevMonth').click(function(e){
                e.preventDefault();
                month -= 1;
@@ -77,6 +75,7 @@
                var tmpTodayDay = today.getDate();
                var todayDate = today.getFullYear() + '-' + (tmpTodayMonth <  10 ? '0' + tmpTodayMonth : tmpTodayMonth) + '-' + (tmpTodayDay < 10 ? '0' + tmpTodayDay : tmpTodayDay);
                
+               
                tableBody.empty();
 
                var tableDays = '';
@@ -103,6 +102,7 @@
                      l++;
                   }
                };
+               
 
                // drawing the calendar in table
                var tableRowTmp = $('<tr><tr>');
@@ -110,6 +110,7 @@
                   var currentDay = indexDays.days[i].split('-');
                   var tmpCurrentMonth = parseInt(currentDay[1]) + 1;
                   var currentDayDate = currentDay[0] + '-' + (tmpCurrentMonth < 10 ? '0' + tmpCurrentMonth : tmpCurrentMonth) + '-' + currentDay[2];
+                  
                   if (currentDayDate == todayDate) {
                      currentDayClass = settings.selectedClass+' today selected-day';
                   } else {
@@ -129,13 +130,28 @@
                };
                tableBody.find('tr').eq(0).remove();
 
-
-               // load week selected if
+               // paint selected week if
                if (settings.selectedClass == 'active-day-for-week') {
                   tableContent.find('div.today').each(function(){
                      functionOnClickWeek($(this));
                   });
                };
+               // on load calendar action
+               if ($.isFunction(settings.onLoad)) {
+                  if (settings.selectedClass == 'active-day') {
+                        var selectedDay = tableContent.find('div.selected-day');
+                        var currentDay = selectedDay.data('date');
+                        
+                        settings.onLoad.call( this, currentDay );
+                  };
+                  if (settings.selectedClass == 'active-day-for-week') {
+                        var selectedRange = tableContent.find('div.selected-day').parent().parent().find('td');
+                        var range = selectedRange.eq(0).data('date') + '_' + selectedRange.eq(selectedRange.length - 1).data('date');
+                        
+                        settings.onLoad.call( this, range );
+                  };
+               };
+               // on click day action
                if ($.isFunction(settings.onClick)) {
                   if (settings.selectedClass == 'active-day') {
                      tableContent.find('div.active-day').on('click', function(e){
@@ -154,7 +170,7 @@
                      });
                   };
                };
-
+               
             }
 
             // checking date
@@ -175,6 +191,7 @@
             function gettingNumberDayWeek(day, month, year){
                var objDate = new Date(year, month, day);
                var nday = objDate.getDay();
+               
                return nday;
             }
             // custom function where we write the events to lanuch on click a day
