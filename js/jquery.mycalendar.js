@@ -1,10 +1,17 @@
 (function($){
    $.fn.extend({
-      myPersonalCalendar: function(selectedClass) {
+      myPersonalCalendar: function(options) {
+         var settings = $.extend({
+            selectedClass: "active-day",
+            text: null,
+            onClick: null,
+            onMouseOver: null,
+         }, options);
+
          return this.each(function(){
-            console.log($(this));
             $(this).empty();
             // init vars
+            var dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
             var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
             var today = new Date();
             var month = today.getMonth();
@@ -30,6 +37,11 @@
             
             // setting and drawing the content
             drawingCalendar(month, year);
+            var todayPosition = gettingNumberDayWeek(today.getDate(), month, year);
+            var setDateTi = $('<h1 class="h1">'+dayNames[ (todayPosition == dayNames.length ? 0 : todayPosition) ]+' '+today.getDate()+'</h1><h2 class="h2">'+monthNames[month]+'</h2>');
+            $('.ti').empty().append(setDateTi);
+
+            // calling functions
             tableContent.find('div.prevMonth').click(function(e){
                e.preventDefault();
                month -= 1;
@@ -64,7 +76,6 @@
                var tmpTodayMonth = today.getMonth() + 1;
                var tmpTodayDay = today.getDate();
                var todayDate = today.getFullYear() + '-' + (tmpTodayMonth <  10 ? '0' + tmpTodayMonth : tmpTodayMonth) + '-' + (tmpTodayDay < 10 ? '0' + tmpTodayDay : tmpTodayDay);
-               // console.log(lastDay);
                
                tableBody.empty();
 
@@ -92,7 +103,6 @@
                      l++;
                   }
                };
-               // console.log(indexDays.days);
 
                // drawing the calendar in table
                var tableRowTmp = $('<tr><tr>');
@@ -100,14 +110,13 @@
                   var currentDay = indexDays.days[i].split('-');
                   var tmpCurrentMonth = parseInt(currentDay[1]) + 1;
                   var currentDayDate = currentDay[0] + '-' + (tmpCurrentMonth < 10 ? '0' + tmpCurrentMonth : tmpCurrentMonth) + '-' + currentDay[2];
-                  // console.log(currentDayDate + ' ' + todayDate);
                   if (currentDayDate == todayDate) {
-                     currentDayClass = selectedClass+' today selected-day';
+                     currentDayClass = settings.selectedClass+' today selected-day';
                   } else {
                      if (parseInt(currentDay[1]) != month) {
-                        currentDayClass = selectedClass+' other-month';
+                        currentDayClass = settings.selectedClass+' other-month';
                      } else {
-                        currentDayClass = selectedClass;
+                        currentDayClass = settings.selectedClass;
                      }
                   }
                   
@@ -120,21 +129,32 @@
                };
                tableBody.find('tr').eq(0).remove();
 
+
                // load week selected if
-               if (selectedClass == 'active-day-for-week') {
+               if (settings.selectedClass == 'active-day-for-week') {
                   tableContent.find('div.today').each(function(){
                      functionOnClickWeek($(this));
                   });
                };
-               // define the action in active days
-               tableContent.find('div.active-day').on('click', function(e){
-                  e.preventDefault();
-                  functionOnClickDay($(this));
-               });
-               tableContent.find('div.active-day-for-week').on('click', function(e){
-                  e.preventDefault();
-                  functionOnClickWeek($(this));
-               });
+               if ($.isFunction(settings.onClick)) {
+                  if (settings.selectedClass == 'active-day') {
+                     tableContent.find('div.active-day').on('click', function(e){
+                        e.preventDefault();
+                        var currentDay = functionOnClickDay($(this));
+                        
+                        settings.onClick.call( this, currentDay );
+                     });
+                  };
+                  if (settings.selectedClass == 'active-day-for-week') {
+                     tableContent.find('div.active-day-for-week').on('click', function(e){
+                        e.preventDefault();
+                        var range = functionOnClickWeek($(this));
+                        
+                        settings.onClick.call( this, range );
+                     });
+                  };
+               };
+
             }
 
             // checking date
@@ -155,18 +175,16 @@
             function gettingNumberDayWeek(day, month, year){
                var objDate = new Date(year, month, day);
                var nday = objDate.getDay();
-               /*if (nday == 0) 
-                  nday = 6;
-               else
-                  nday--;*/
                return nday;
             }
             // custom function where we write the events to lanuch on click a day
             function functionOnClickDay(item){
-               console.log( item.data('date') );
                var allDays = item.parent().parent().parent().find('div');
                allDays.removeClass('selected-day');
                item.addClass('selected-day');
+               var day = new Date(item.data('date'));
+               
+               return item.data('date');
             }
             // custom function where we write the events to lanuch on click a day
             function functionOnClickWeek(item){
@@ -174,10 +192,11 @@
                row.siblings().removeClass('selected-week');
                row.addClass('selected-week');
                var days = row.find('td');
-               console.log( days.eq(0).data('date') + '_' + days.eq(days.length - 1).data('date'));
+               
+               return days.eq(0).data('date') + '_' + days.eq(days.length - 1).data('date');
             }
          });
       }, // end function
-      
+
    });
 })(jQuery)
