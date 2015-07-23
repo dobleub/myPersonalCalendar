@@ -25,8 +25,18 @@
 <script type="text/javascript">
    $(document).ready(function(){
       // select for days
-      $('.mycalendar').myPersonalCalendar('active-day');
+      $('.mycalendar').myPersonalCalendar({
+	selectedClass:'active-day',
+	onClick: function(data){
+	  console.log(data);
+	}
+      });
       // select for weeks
-      $('.mycalendar2').myPersonalCalendar('active-day-for-week');
+      $('.mycalendar2').myPersonalCalendar({
+	selectedClass:'active-day-for-week',
+	onClick: function(data){
+	  console.log(data);
+	}
+      });
    });
 </script>
