@@ -16,8 +16,8 @@
 </head>
 
 <body>
-   <div class="mycalendar"></div>
-   <div class="mycalendar2"></div>
+   <div class="mycalendar calendar01"></div>
+   <div class="mycalendar calendar02"></div>
 </body>
 
 </html>
@@ -25,15 +25,21 @@
 <script type="text/javascript">
    $(document).ready(function(){
       // select for days
-      $('.mycalendar').myPersonalCalendar({
+      $('.calendar01').myPersonalCalendar({
 	selectedClass:'active-day',
+	onLoad: function(data){
+	  console.log(data);
+	},
 	onClick: function(data){
 	  console.log(data);
 	}
       });
       // select for weeks
-      $('.mycalendar2').myPersonalCalendar({
+      $('.calendar02').myPersonalCalendar({
 	selectedClass:'active-day-for-week',
+	onLoad: function(data){
+	  console.log(data);
+	},
 	onClick: function(data){
 	  console.log(data);
 	}
