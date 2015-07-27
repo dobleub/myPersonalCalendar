@@ -26,23 +26,31 @@
    $(document).ready(function(){
       // select for days
       $('.calendar01').myPersonalCalendar({
-	selectedClass:'active-day',
-	onLoad: function(data){
-	  console.log(data);
-	},
-	onClick: function(data){
-	  console.log(data);
-	}
+        selectedClass:'active-day',
+        onLoad: function(date){
+          console.log(date);
+        },
+        onClickDay: function(date){
+          console.log(date);
+        },
+        onReload: function(date){
+          console.log(date);
+        },
+        selectDateAlways: true,
       });
       // select for weeks
       $('.calendar02').myPersonalCalendar({
-	selectedClass:'active-day-for-week',
-	onLoad: function(data){
-	  console.log(data);
-	},
-	onClick: function(data){
-	  console.log(data);
-	}
+        selectedClass:'active-day-for-week',
+        onLoad: function(date){
+          console.log(date);
+        },
+        onClickDay: function(date){
+          console.log(date);
+        },
+        onReload: function(date){
+          console.log(date);
+        },
+        selectDateAlways: true,
       });
    });
 </script>
