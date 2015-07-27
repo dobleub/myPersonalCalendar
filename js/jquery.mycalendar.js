@@ -134,6 +134,7 @@
                tableBody.find('tr').eq(0).remove();
                if (todayExist == (indexDays.days.length)) {
                   tableBody.find('div.active-day[data-date='+year+'-'+((month+1)<10 ? '0'+(month+1) : (month+1))+'-01]').addClass('selected-day');
+                  tableBody.find('div.active-day-for-week[data-date='+year+'-'+((month+1)<10 ? '0'+(month+1) : (month+1))+'-01]').addClass('selected-day');
                };
 
                // paint selected week if
