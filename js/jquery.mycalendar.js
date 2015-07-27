@@ -106,6 +106,7 @@
 
                // drawing the calendar in table
                var tableRowTmp = $('<tr><tr>');
+               var todayExist = 0;
                for (var i = 0; i < indexDays.days.length; i++) {
                   var currentDay = indexDays.days[i].split('-');
                   var tmpCurrentMonth = parseInt(currentDay[1]) + 1;
@@ -113,12 +114,14 @@
                   
                   if (currentDayDate == todayDate) {
                      currentDayClass = settings.selectedClass+' today selected-day';
+                     todayExist = 0;
                   } else {
                      if (parseInt(currentDay[1]) != month) {
                         currentDayClass = settings.selectedClass+' other-month';
                      } else {
                         currentDayClass = settings.selectedClass;
                      }
+                     todayExist++;
                   }
                   
                   var tmp = $('<td data-date="'+currentDayDate+'"> <div class="'+currentDayClass+'" data-date="'+currentDayDate+'"><p>'+parseInt(currentDay[2])+'</p></div> </td>');
@@ -129,10 +132,13 @@
                   }
                };
                tableBody.find('tr').eq(0).remove();
+               if (todayExist == (indexDays.days.length)) {
+                  tableBody.find('div.active-day[data-date='+year+'-'+((month+1)<10 ? '0'+(month+1) : (month+1))+'-01]').addClass('selected-day');
+               };
 
                // paint selected week if
                if (settings.selectedClass == 'active-day-for-week') {
-                  tableContent.find('div.today').each(function(){
+                  tableContent.find('div.selected-day').each(function(){
                      functionOnClickWeek($(this));
                   });
                };
