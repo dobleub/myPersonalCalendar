@@ -8,6 +8,7 @@
             onReload: null,
             onClickDay: null,
             selectDateAlways: false,
+            startWithDate: null,
          }, options);
 
          return this.each(function(){
@@ -15,7 +16,12 @@
             // init vars
             var dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
             var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            var today = new Date();
+            if (settings.startWithDate) {
+               var today = new Date(settings.startWithDate);
+               today.setDate(today.getDate() + 1);
+            } else {
+               var today = new Date();
+            }
             var month = today.getMonth();
             var year = today.getFullYear();
 
