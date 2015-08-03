@@ -41,14 +41,14 @@
       // select for weeks
       $('.calendar02').myPersonalCalendar({
         selectedClass:'active-day-for-week',
-        onLoad: function(date){
-          console.log(date);
+        onLoad: function(week, selectedDay){
+          console.log(week + ' ' + selectedDay);
         },
-        onClickDay: function(date){
-          console.log(date);
+        onClickDay: function(week, selectedDay){
+          console.log(week + ' ' + selectedDay);
         },
-        onReload: function(date){
-          console.log(date);
+        onReload: function(week, selectedDay){
+          console.log(week + ' ' + selectedDay);
         },
         selectDateAlways: true,
       });
