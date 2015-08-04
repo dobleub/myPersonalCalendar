@@ -22,6 +22,7 @@
             } else {
                var today = new Date();
             }
+            // console.log(today);
             var month = today.getMonth();
             var year = today.getFullYear();
 
@@ -136,9 +137,10 @@
                      }
                      todayExist++;
                   }
-                  // select today date
+                  // select today
                   var td = new Date();
-                  if (currentDayDate == (td.getFullYear()+'-'+(td.getMonth()<10 ? '0'+td.getMonth() : td.getMonth())+'-'+(td.getDate()<10 ? '0'+td.getDate() : td.getDate())) ) {
+                  var tmpTd = td.getMonth() + 1;
+                  if (currentDayDate == (td.getFullYear()+'-'+(tmpTd<10 ? '0'+tmpTd : tmpTd)+'-'+(td.getDate()<10 ? '0'+td.getDate() : td.getDate())) ) {
                      currentDayClass = currentDayClass+' today';
                   }
                   
@@ -214,8 +216,9 @@
                      tableContent.find('div.active-day').on('click', function(e){
                         e.preventDefault();
                         var currentDay = functionOnClickDay($(this));
-                        
-                        option.call( this, currentDay );
+                        if ($.isFunction(option)) {
+                           option.call( this, currentDay );
+                        }
                      });
                   };
                   if (settings.selectedClass == 'active-day-for-week') {
@@ -223,30 +226,34 @@
                         e.preventDefault();
                         var selectedDay = $(this).data('date');
                         var range = functionOnClickWeek($(this));
-                        
-                        option.call( this, range, selectedDay );
+                        if ($.isFunction(option)) {
+                           option.call( this, range, selectedDay );
+                        }
                      });
                   };
                };
-            }
+            } // end onEventClickOption
             function onEventLoadOption(option){
                if ($.isFunction(option)) {
                   if (settings.selectedClass == 'active-day') {
                         var selectedDay = tableContent.find('div.selected-day');
                         var currentDay = selectedDay.data('date');
-                        
+                     if ($.isFunction(option)) {   
                         option.call( this, currentDay );
+                     }
                   };
                   if (settings.selectedClass == 'active-day-for-week') {
                         var selectedDay = tableContent.find('div.selected-day').data('date');
                         var selectedRange = tableContent.find('div.selected-day').parent().parent().find('td');
                         var range = selectedRange.eq(0).data('date') + '_' + selectedRange.eq(selectedRange.length - 1).data('date');
-                        
+                     if ($.isFunction(option)) {
                         option.call( this, range, selectedDay );
+                     }
                   };
                };
-            }
+            } // end onEventLoadOption
             function onEventReloadOption(option, selectDateAlways, month, year){
+               var currentMonth = month + 1;
                if (selectDateAlways == true) {
                   onEventLoadOption(option);
                } else {
@@ -255,23 +262,30 @@
                      if (selectedDay.length > 0) {
                         var currentDay = selectedDay.data('date');
                      } else {
-                        var currentDay = year+'-'+((month+1)<10 ? '0'+(month+1) : (month+1))+'-01';
+                        var currentDay = year+'-'+(currentMonth<10 ? '0'+currentMonth : currentMonth)+'-01';
                      }
-                     option.call(this, currentDay);
+                     if ($.isFunction(option)) {
+                        option.call( this, currentDay );
+                     }
                   };
                   if (settings.selectedClass == 'active-day-for-week') {
                      var selectedDay = tableContent.find('div.selected-day').data('date');
+                     if (!selectedDay) {
+                        selectedDay = year+'-'+(currentMonth<10 ? '0'+currentMonth : currentMonth)+'-01';
+                     };
                      var selectedRange = tableContent.find('div.selected-day').parent().parent().find('td');
                      if (selectedRange.length > 0) {
                         var range = selectedRange.eq(0).data('date') + '_' + selectedRange.eq(selectedRange.length - 1).data('date');
                      } else {
-                        var selectedRange = tableContent.find('div.active-day-for-week[data-date='+year+'-'+((month+1)<10 ? '0'+(month+1) : (month+1))+'-01'+']').parent().parent().find('td');
+                        var selectedRange = tableContent.find('div.active-day-for-week[data-date='+year+'-'+(currentMonth<10 ? '0'+currentMonth : currentMonth)+'-01'+']').parent().parent().find('td');
                         var range = selectedRange.eq(0).data('date') + '_' + selectedRange.eq(selectedRange.length - 1).data('date');
                      }
-                     option.call(this, range, selectedDay);
+                     if ($.isFunction(option)) {
+                        option.call( this, range, selectedDay );
+                     }
                   };
                }
-            }
+            } // end onEventReloadOption
 
          });
       }, // end function
